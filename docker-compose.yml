@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  zipkin-server:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    restart: on-failure
+    networks:
+      - kiev-network
+    tty: true
+    stdin_open: true
+
+  cambio-db:
+    image: postgres:latest
+    container_name: cambio-db
+    restart: always
+    environment:
+      POSTGRES_DB: cambio_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - cambio-db-data:/var/lib/postgresql/data
+    networks:
+      - kiev-network
+
+  book-db:
+    image: postgres:latest
+    container_name: book-db
+    restart: always
+    environment:
+      POSTGRES_DB: book_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGPORT: 5432
+    ports:
+      - "5433:5432"  # Mapeia a porta 5433 no host para a porta 5432 no contêiner
+    volumes:
+      - book-db-data:/var/lib/postgresql/data
+    networks:
+      - kiev-network
+
+  naming-server:
+    image: kievmaia/naming-server:0.0.1-SNAPSHOT
+    ports:
+      - "8761:8761"
+    networks:
+      - kiev-network
+
+  api-gateway:
+    image: kievmaia/api-gateway:0.0.1-SNAPSHOT
+    ports:
+      - "8765:8765"
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING_ZIPKIN_BASE_URL: http://zipkin-server:9411/
+    networks:
+      - kiev-network
+
+  cambio-service:
+    image: kievmaia/cambio-service
+    restart: always
+    build:
+      context: .
+      dockerfile: cambio-service/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - naming-server
+      - cambio-db
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASE.URL: http://zipkin-server:9411/
+      SPRING.DATASOURCE.URL: jdbc:postgresql://cambio-db:5432/cambio_service
+      SPRING.DATASOURCE.USERNAME: postgres
+      SPRING.DATASOURCE.PASSWORD: postgres
+      SPRING.FLYWAY.URL: jdbc:postgresql://cambio-db:5432/cambio_service
+      SPRING.FLYWAY.USERNAME: postgres
+      SPRING.FLYWAY.PASSWORD: postgres
+      SPRING.FLYWAY.BASELINE-ON-MIGRATE: true
+    networks:
+      - kiev-network
+
+networks:
+  kiev-network:
+    driver: bridge
+
+volumes:
+  cambio-db-data:
+  book-db-data:
