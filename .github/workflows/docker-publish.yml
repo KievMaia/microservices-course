@@ -20,6 +20,11 @@ jobs:
           java-version: 17
           distribution: 'adopt'
 
+      - name: Navigate to naming-server
+        run: |
+          cd naming-server
+          ls -al
+
       - name: Build Eureka Naming Server Container Image
         working-directory: naming-server
         run: mvnw spring-boot:build-image -DskipTests
