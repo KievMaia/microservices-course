@@ -22,4 +22,4 @@ jobs:
           distribution: 'adopt'
 
       - name: List contents of /home/runner/work/microservices-course/microservices-course
-        run: ls -al /home/runner/work/microservices-course/
+        run: ls -al /home/runner/work/microservices-course/microservices-course/
