@@ -20,6 +20,9 @@ jobs:
           java-version: 17
           distribution: 'adopt'
 
+      - name: List files
+        run: ls -al microservices-course/
+
       - name: Build Eureka Naming Server Container Image
         working-directory: naming-server
         run: mvnw spring-boot:build-image -DskipTests
