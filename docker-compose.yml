@@ -86,6 +86,30 @@ services:
     networks:
       - kiev-network
 
+  book-service:
+    image: kievmaia/book-service
+    restart: always
+    build:
+      context: .
+      dockerfile: book-service/Dockerfile
+    ports:
+      - "8100:8100"
+    depends_on:
+      - naming-server
+      - book-db
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASE.URL: http://zipkin-server:9411/
+      SPRING.DATASOURCE.URL: jdbc:postgresql://book-db:5432/book_service
+      SPRING.DATASOURCE.USERNAME: postgres
+      SPRING.DATASOURCE.PASSWORD: postgres
+      SPRING.FLYWAY.URL: jdbc:postgresql://book-db:5432/book_service
+      SPRING.FLYWAY.USERNAME: postgres
+      SPRING.FLYWAY.PASSWORD: postgres
+      SPRING.FLYWAY.BASELINE-ON-MIGRATE: true
+    networks:
+      - kiev-network
+
 networks:
   kiev-network:
     driver: bridge
