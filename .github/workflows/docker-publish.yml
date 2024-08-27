@@ -5,7 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-   
+    env:
+      working-directory: ./naming-server
 
     steps:
       - name: Login into Docker Hub
@@ -21,5 +22,5 @@ jobs:
           distribution: 'adopt'
 
       - name: Build Eureka Naming Server Container Image
-        working-directory: ./naming-server
+        working-directory: ${{env.working-directory}}
         run: mvnw spring-boot:build-image -DskipTests
