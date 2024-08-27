@@ -21,5 +21,5 @@ jobs:
           distribution: 'adopt'
 
       - name: Build Eureka Naming Server Container Image
-        working-directory: ${{github.workspace}}/naming-server
+        working-directory:
         run: mvnw spring-boot:build-image -DskipTests
