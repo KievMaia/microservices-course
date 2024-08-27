@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      working-directory: ./naming-server
+      naming-server: /home/runner/work/microservices-course/microservices-course/naming-server
 
     steps:
       - name: Login into Docker Hub
@@ -21,9 +21,6 @@ jobs:
           java-version: 17
           distribution: 'adopt'
 
-      - name: List contents of /home/runner/work/microservices-course/
-        run: ls -al /home/runner/work/microservices-course/microservices-course
-
       - name: Build Eureka Naming Server Container Image
-        working-directory: ${{env.working-directory}}
+        working-directory: ${{env.naming-server}}
         run: mvnw spring-boot:build-image -DskipTests
