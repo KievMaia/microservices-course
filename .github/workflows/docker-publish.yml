@@ -21,6 +21,9 @@ jobs:
           java-version: 17
           distribution: 'adopt'
 
+      - name: List contents of /home/runner/work/microservices-course/
+        run: ls -al /home/runner/work/microservices-course/
+
       - name: Build Eureka Naming Server Container Image
         working-directory: ${{env.working-directory}}
         run: mvnw spring-boot:build-image -DskipTests
