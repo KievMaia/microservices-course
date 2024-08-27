@@ -21,9 +21,8 @@ jobs:
           java-version: 17
           distribution: 'adopt'
 
-      - name: Ensure permissions for microservices-course
-        run: |
-          chmod -R a+rX /home/runner/work/microservices-course/microservices-course/
-
-      - name: List contents of /home/runner/work/microservices-course/microservices-course
-        run: ls -al /home/runner/work/microservices-course/microservices-course
+      - name: Build Eureka Naming Server Container Image
+        with:
+          ref: master
+        working-directory: /home/runner/work/microservices-course/microservices-course/naming-server
+        run: mvnw spring-boot:build-image -DskipTests
