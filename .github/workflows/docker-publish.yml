@@ -21,5 +21,9 @@ jobs:
           java-version: 17
           distribution: 'adopt'
 
+      - name: Ensure permissions for microservices-course
+        run: |
+          chmod -R a+rX /home/runner/work/microservices-course/microservices-course/
+
       - name: List contents of /home/runner/work/microservices-course/microservices-course
-        run: ls -al /home/runner/work/
+        run: ls -al /home/runner/work/microservices-course/microservices-course
