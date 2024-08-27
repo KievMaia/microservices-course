@@ -21,7 +21,7 @@ jobs:
           distribution: 'adopt'
 
       - name: List files
-        run: ls -al microservices-course/
+        run: ls -al /
 
       - name: Build Eureka Naming Server Container Image
         working-directory: naming-server
