@@ -22,7 +22,7 @@ jobs:
 
       - name: Navigate to naming-server
         run: |
-          cd naming-server
+          cd ../naming-server
           ls -al
 
       - name: Build Eureka Naming Server Container Image
